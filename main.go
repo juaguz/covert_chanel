@@ -38,7 +38,8 @@ func handlePacket(packet gopacket.Packet) {
 func main() {
 	log.Println("inicia")
 	ip = os.Args[1]
-	if handle, err := pcap.OpenLive("en0", 1600, true, pcap.BlockForever); err != nil {
+	device := os.Args[2]
+	if handle, err := pcap.OpenLive(device, 1600, true, pcap.BlockForever); err != nil {
 		panic(err)
 	} else if err := handle.SetBPFFilter("src host "+ip+" and icmp"); err != nil { // optional
 		panic(err)
