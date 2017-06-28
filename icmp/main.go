@@ -12,7 +12,7 @@ func Handler(message string, ip string) {
 
 	c, err := icmp.ListenPacket("ip4:icmp", "0.0.0.0")
 	if err != nil {
-		log.Fatalf("listen err, %s", err)
+		log.Printf("listen err, %s", err)
 	}
 	defer c.Close()
 
@@ -27,6 +27,7 @@ func Handler(message string, ip string) {
 	if err != nil {
 		log.Println(err)
 	}
+
 	if _, err := c.WriteTo(wb, &net.IPAddr{IP: net.ParseIP(ip)}); err != nil {
 		log.Printf("WriteTo err, %s", err)
 	}
